@@ -65,16 +65,19 @@ def predict(inputs):
         resolution = 512
         steps = 100
         config = 'configs/generate.yaml'
-        ckpt = '/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt'
+        ckpt = '/home/j/Desktop/Programming/Web/forked/deployment/aws/models/instruct-pix2pix-forked/checkpoints/instruct-pix2pix-00-22000.ckpt'
         vae_ckpt = None
         input = inputs['input']
         edit = inputs['edit']
         cfg_text = 7.5
         cfg = 1.5
         seed = 42
-        
+
     args = Args()
     config = OmegaConf.load(args.config)
+
+    input_image = Image.fromarray(np.array(args.input, dtype=np.uint8)).convert("RGB")
+
     model = load_model_from_config(config, args.ckpt, args.vae_ckpt)
     model.eval().cuda()
     model_wrap = K.external.CompVisDenoiser(model)
@@ -82,7 +85,7 @@ def predict(inputs):
     null_token = model.get_learned_conditioning([""])
 
     seed = random.randint(0, 100000) if args.seed is None else args.seed
-    input_image = Image.open(args.input).convert("RGB")
+ 
     width, height = input_image.size
     factor = args.resolution / max(width, height)
     factor = math.ceil(min(width, height) * factor / 64) * 64 / min(width, height)
@@ -120,3 +123,6 @@ def predict(inputs):
     return edited_image
 
 
+import json
+with open('/home/j/Desktop/Programming/Web/forked/deployment/aws/models/instruct-pix2pix-forked/pix2pix_sample_inputs.json', 'r') as f:
+    predict(json.loads(f.read()))
