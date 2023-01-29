@@ -65,7 +65,7 @@ def predict(inputs):
         resolution = 512
         steps = 100
         config = 'configs/generate.yaml'
-        ckpt = '/home/j/Desktop/Programming/Web/forked/deployment/aws/models/instruct-pix2pix-forked/checkpoints/instruct-pix2pix-00-22000.ckpt'
+        ckpt = '/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt'
         vae_ckpt = None
         input = inputs['input']
         edit = inputs['edit']
@@ -123,6 +123,6 @@ def predict(inputs):
     return edited_image
 
 
-import json
-with open('/home/j/Desktop/Programming/Web/forked/deployment/aws/models/instruct-pix2pix-forked/pix2pix_sample_inputs.json', 'r') as f:
-    predict(json.loads(f.read()))
+# import json
+# with open('/home/j/Desktop/Programming/Web/forked/deployment/aws/models/instruct-pix2pix-forked/pix2pix_sample_inputs.json', 'r') as f:
+#     predict(json.loads(f.read()))
