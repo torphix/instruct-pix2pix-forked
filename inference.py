@@ -59,9 +59,54 @@ def load_model_from_config(config, ckpt, vae_ckpt=None, verbose=False):
         print(u)
     return model
 
+def predict_function(root_bucket:str, model_data_zip_filename:str, input_data:dict):
+    import os
+    import json
+    import tarfile
+    import filelock
 
+<<<<<<< HEAD
 def predict(input_data):
 
+=======
+
+    # Set globals
+    cache_dir = "/var/meadowrun/machine_cache"
+    # Get model assets
+    # os.makedirs(f'{cache_dir}/model_assets', exist_ok=True)
+    if (
+        os.path.exists(f"{cache_dir}/model_assets/{model_data_zip_filename}")
+        is False
+    ):
+        print("Downloading files...")
+        os.system(
+            f'aws s3 sync {root_bucket} {cache_dir}/model_assets --exclude "*"  --include {model_data_zip_filename}'
+        )
+    else:
+        print("Tar file already downloaded")
+    # only zip file present
+    # if len(os.listdir(f"{cache_dir}/model_assets")) == 1:
+    #     print("Extracting...")
+    #     # Must lock file first to prevent multiple threads from reading at once
+    #     with filelock.FileLock(
+    #         f"{cache_dir}/model_assets/{model_data_zip_filename}.lock"
+    #     ):
+    #         with tarfile.open(
+    #             f"{cache_dir}/model_assets/{model_data_zip_filename}"
+    #         ) as archive:
+    #             archive.extractall(f"{cache_dir}/model_assets/")
+    #         print("Extracted")
+    # else:
+    #     print("Files alread extracted")
+    print("Predicting....")
+    response = predict(input_data)
+    return response
+
+
+def predict(input_data):
+    import json
+    input_data = json.loads(input_data)
+>>>>>>> bb7accb3af44d794abd48a8e56bb1d27188468cd
     class Args:
         resolution = 512
         steps = 100
@@ -78,7 +123,7 @@ def predict(input_data):
 
     config = OmegaConf.load(args.config)
 
-    input_image = Image.fromarray(np.array(args.input)).convert("RGB")
+    input_image = Image.fromarray(np.array(args.input, dtype=np.uint8)).convert("RGB")
 
     model = load_model_from_config(config, args.ckpt, args.vae_ckpt)
     model.eval().cuda()
