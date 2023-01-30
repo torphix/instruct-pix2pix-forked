@@ -60,19 +60,21 @@ def load_model_from_config(config, ckpt, vae_ckpt=None, verbose=False):
     return model
 
 
-def predict():
-    parser = ArgumentParser()
-    parser.add_argument("--resolution", default=512, type=int)
-    parser.add_argument("--steps", default=100, type=int)
-    parser.add_argument("--config", default="configs/generate.yaml", type=str)
-    parser.add_argument("--ckpt", default="/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt", type=str)
-    parser.add_argument("--vae-ckpt", default=None, type=str)
-    parser.add_argument("--input", required=True, type=list)
-    parser.add_argument("--edit", required=True, type=str)
-    parser.add_argument("--cfg-text", default=7.5, type=float)
-    parser.add_argument("--cfg-image", default=1.5, type=float)
-    parser.add_argument("--seed", type=int)
-    args = parser.parse_args()
+def predict(input_data):
+
+    class Args:
+        resolution = 512
+        steps = 100
+        config = "configs/generate.yaml"
+        ckpt = "/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt"
+        vae_ckpt = None
+        input = input_data['input']
+        edit = input_data['edit']
+        cfg_text = 7.5
+        cfg_image = 1.5
+        seed = None
+    
+    args = Args()
 
     config = OmegaConf.load(args.config)
 
