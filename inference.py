@@ -60,23 +60,23 @@ def load_model_from_config(config, ckpt, vae_ckpt=None, verbose=False):
     return model
 
 
-def predict(inputs):
-    class Args:
-        resolution = 512
-        steps = 100
-        config = 'configs/generate.yaml'
-        ckpt = '/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt'
-        vae_ckpt = None
-        input = inputs['input']
-        edit = inputs['edit']
-        cfg_text = 7.5
-        cfg = 1.5
-        seed = 42
+def predict():
+    parser = ArgumentParser()
+    parser.add_argument("--resolution", default=512, type=int)
+    parser.add_argument("--steps", default=100, type=int)
+    parser.add_argument("--config", default="configs/generate.yaml", type=str)
+    parser.add_argument("--ckpt", default="/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt", type=str)
+    parser.add_argument("--vae-ckpt", default=None, type=str)
+    parser.add_argument("--input", required=True, type=list)
+    parser.add_argument("--edit", required=True, type=str)
+    parser.add_argument("--cfg-text", default=7.5, type=float)
+    parser.add_argument("--cfg-image", default=1.5, type=float)
+    parser.add_argument("--seed", type=int)
+    args = parser.parse_args()
 
-    args = Args()
     config = OmegaConf.load(args.config)
 
-    input_image = Image.fromarray(np.array(args.input, dtype=np.uint8)).convert("RGB")
+    input_image = Image.fromarray(np.array(args.input)).convert("RGB")
 
     model = load_model_from_config(config, args.ckpt, args.vae_ckpt)
     model.eval().cuda()
@@ -85,7 +85,6 @@ def predict(inputs):
     null_token = model.get_learned_conditioning([""])
 
     seed = random.randint(0, 100000) if args.seed is None else args.seed
- 
     width, height = input_image.size
     factor = args.resolution / max(width, height)
     factor = math.ceil(min(width, height) * factor / 64) * 64 / min(width, height)
@@ -123,6 +122,3 @@ def predict(inputs):
     return edited_image
 
 
-# import json
-# with open('/home/j/Desktop/Programming/Web/forked/deployment/aws/models/instruct-pix2pix-forked/pix2pix_sample_inputs.json', 'r') as f:
-#     predict(json.loads(f.read()))
