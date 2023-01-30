@@ -65,10 +65,6 @@ def predict_function(root_bucket:str, model_data_zip_filename:str, input_data:di
     import tarfile
     import filelock
 
-<<<<<<< HEAD
-def predict(input_data):
-
-=======
 
     # Set globals
     cache_dir = "/var/meadowrun/machine_cache"
@@ -106,7 +102,6 @@ def predict(input_data):
 def predict(input_data):
     import json
     input_data = json.loads(input_data)
->>>>>>> bb7accb3af44d794abd48a8e56bb1d27188468cd
     class Args:
         resolution = 512
         steps = 100
