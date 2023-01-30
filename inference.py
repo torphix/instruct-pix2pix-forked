@@ -118,7 +118,7 @@ def predict(input_data):
 
     config = OmegaConf.load(args.config)
 
-    input_image = Image.fromarray(np.array(args.input)).convert("RGB")
+    input_image = Image.fromarray(np.array(args.input, dtype=np.uint8)).convert("RGB")
 
     model = load_model_from_config(config, args.ckpt, args.vae_ckpt)
     model.eval().cuda()
