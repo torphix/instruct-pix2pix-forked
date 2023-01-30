@@ -102,6 +102,8 @@ def predict_function(root_bucket:str, model_data_zip_filename:str, input_data:di
 def predict(input_data):
     import json
     input_data = json.loads(input_data)
+    
+    print(input_data.keys())
     class Args:
         resolution = 512
         steps = 100
