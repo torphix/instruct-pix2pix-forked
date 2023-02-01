@@ -132,7 +132,7 @@ def predict(input_data):
     class Args:
         resolution = 512
         steps = 100
-        config = "configs/generate.yaml"
+        config = "./configs/generate.yaml"
         ckpt = (
             "/var/meadowrun/machine_cache/model_assets/instruct-pix2pix-00-22000.ckpt"
         )
