@@ -4,7 +4,6 @@ import logging
 import meadowrun
 import numpy as np
 from PIL import Image
-from inference import predict
 import requests
 import io
 from PIL import Image
@@ -15,11 +14,18 @@ inputs = {
 }
 
 
+def inference_function(inputs):
+    from .inference import predict
+
+    response = predict(inputs)
+    return response
+
+
 print(
     asyncio.run(
         meadowrun.run_function(
-            predict,
-            meadowrun.AllocEC2Instance(),
+            inference_function,
+            meadowrun.AllocEC2Instance("eu-west-2"),
             meadowrun.Resources(
                 logical_cpu=1,
                 memory_gb=4,
@@ -30,6 +36,7 @@ print(
             meadowrun.Deployment.git_repo(
                 "https://github.com/torphix/instruct-pix2pix-forked.git",
                 interpreter=meadowrun.CondaEnvironmentYmlFile("environment.yaml"),
+                path_to_source="instruct-pix2pix-forked",
             ),
             args=[inputs],
         )

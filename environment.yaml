@@ -39,3 +39,4 @@ dependencies:
     - seaborn
     - git+https://github.com/crowsonkb/k-diffusion.git
     - awscli==1.27.59
+    - meadowrun
